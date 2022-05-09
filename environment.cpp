@@ -9,11 +9,6 @@
 #include <iomanip>
 #include <cmath>
 
-
-
-
-
-
 double slv_temp()
         {
    
@@ -28,12 +23,8 @@ double slv_temp()
                 place_holder = return_value;
                 return place_holder;
             }
-
             return place_holder;
-            
         }
-
-
 
 double slv_pressure()
         {
@@ -45,14 +36,12 @@ double slv_pressure()
             if(return_value < 29.30)
                 return_value += 0.70;
             return return_value; 
-            
         }
 
 double alt_pressure(double p0, double h, double h0, double T)
      {
         /* P = P0 exp(-gM(h-h0)/(RT)) */  
         return p0 * exp (((-9.80665 * 0.0289644) * (h - h0)) / (8.31432 * T));  
-        
      }
         
 double air_density(double Pa, double T)

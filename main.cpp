@@ -8,6 +8,7 @@
 #include <time.h>
 #include "SFML/oil.h"
 #include "SFML/environment/environment.h"
+#include "SFML/Filter/kalman.h"
 #include <chrono>
 #include <ctime>
 #include <thread>
@@ -148,7 +149,7 @@ int main( )
         //std::cout << "Velocity: " <<cylinder.V << " m/ms" << std::endl;
 		//std::cout << "pump flow rate: " << gear_pump.Q << std::endl;
 		//std::cout << "oil_p_line_pos: " << rectanglePosition.x << std::endl; 
-		std::cout << "oil pressure: " << oil_press << std::endl;
+		std::cout << "oil pressure: " << KALMAN(oil_press) << std::endl;
 		//std::cout << "efficency: " << eff(8.0,0.8,dd_t)<< std::endl;  
         //std::cout << "vol1: " <<engine_cfg.cyl_volume<< std::endl;
         //std::cout << "T4: " <<comb_chamber.T4 << std::endl;
@@ -167,7 +168,6 @@ int main( )
         double air_temp = apu_hardware.apu_compressor.air_temp;
         double last_temp = apu_hardware.apu_compressor.air_temp - air_temp;
     }
-    
 
     
     return EXIT_SUCCESS;

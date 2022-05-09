@@ -55,22 +55,6 @@ static double air_airtake(sf::Clock& clock, int d_t)
     return 0;
 }
 
-static void combustion(int d_t)
-{
-    if(d_t % 5  == 0)
-    {
-        apu_hardware.apu_fuel_vars.fuel_spray = true;
-    }
-    else{
-            apu_hardware.apu_fuel_vars.fuel_spray = false;
-    }
-   
-    if(apu_hardware.apu_fuel_vars.fuel_spray == true)
-        apu_hardware.apu_fuel_vars.fuel_block_quantity = apu_hardware.apu_fuel_vars.fuel_block_quantity - 0.0972;
-          
-   /* Burner thermodynamics */
-    /*Burner Pressure Ration = pt4 / pt3 ~ 1.0 */
-}
 
 double PERCENTRAT(double final_point, double current_point)
 {
@@ -162,24 +146,5 @@ void rpm(double d_t)
     engine.rpm = fx_lin(23,28,2700,18,2000);
     
 }
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
 
 

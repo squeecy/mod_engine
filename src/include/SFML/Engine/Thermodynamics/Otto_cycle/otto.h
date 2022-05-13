@@ -1,70 +1,11 @@
-/* https://quizlet.com/77413940/boeing-717-engines-and-apu-flash-cards */
-/* https://www.grc.nasa.gov/www/k-12/airplane/etr.html */
-/*https://liu.diva-portal.org/smash/get/diva2:934580/FULLTEXT01.pdf Page-18*/
-
-/*Adiabatic process*/
-/*https://www.omnicalculator.com/physics/thermodynamic-processes*/
-/*http://hyperphysics.phy-astr.gsu.edu/hbase/thermo/diesel.html#c2*/
-/* https://www.ohio.edu/mechanical/thermo/Intro/Chapt.1_6/Chapter3d.html */
 #undef __gTRICT_ANSI__
 #include <cmath>
-#include "SFML/variables.h"
+#include "SFML/Global/variables.h"
 #include <stdio.h>
 #include <stdlib.h>
 #include <time.h>
-#include <random>
 #include "SFML/environment/environment.h"
-#include "SFML/physics.h"
-#include <vector>
-
-int suction_random_number()
-{
-    srand(time(NULL));
-    int random = rand() % 35 + 1;
-    int r = random; 
-    if(r < random)
-       random = r; 
-    return r;
-}
-
-static double air_airtake(sf::Clock& clock, int d_t)
-{
-   /*Fkr gallon * 7.481 */ 
-    double volume = M_PI * pow(0.9, 2) * 1.2; 
-    //double area = 1 * 0.4;
-    //CF/M
-    double air_suction =  suction_random_number();
-    apu_hardware.air_inlet = volume * air_suction;
-    double R,P1,T1,V2,P2;
-    /*air compression*/
-    /* P1(V1)/ T1 = P2(V2) / T2*/ 
-    R = 287; // J/kg*K
-    P1 = 1; // atm
-    T1 = C2KELVIN(slv_temp()); 
-    V2 = (1.0/64.0) * volume;
-    P2 = 40; // atm
-    apu_hardware.apu_compressor.air_temp = (T1 * P2/P1 * V2) - 273.15; 
-    
-    double air_temp = apu_hardware.apu_compressor.air_temp;
-    double last_temp = apu_hardware.apu_compressor.air_temp - air_temp;
-    
-    double filter_test = filter_in(apu_hardware.air_inlet, air_temp, d_t, 10.0);
-    /*temp*/
-    apu_hardware.apu_compressor.compressed_air_temp = filter_test;
-   
-    return 0;
-}
-
-
-double PERCENTRAT(double final_point, double current_point)
-{
-    return (current_point / final_point) * 100.0;
-}
-
-double fuelairr()
-{
-    return env_stuff.ambient_pressure / carborator.fuelFlow;
-}
+#include "SFML/Physics/physics.h"
 
 /* 1 - 2 Adiabatic compression */ 
 void adi_compression(){
@@ -140,11 +81,5 @@ void HP()
     //cylinder.HP = cylinder.MEP * IN2MET(3.875) * engine_cfg.boreArea * n / 0.4566;
 }
 
-/* https://www.kitplanes.com/determining-engine-power/ */
-void rpm(double d_t)
-{
-    engine.rpm = fx_lin(23,28,2700,18,2000);
-    
-}
 
 

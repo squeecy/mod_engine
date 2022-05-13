@@ -1,9 +1,9 @@
 /*https://www.lycoming.com/sites/default/files/O-320%20Operator%20Manual%2060297-30.pdf*/
 /*https://x-engineer.org/mean-effective-pressure-mep/.*/ 
-#include "SFML/helper.h"
-#include "SFML/variables.h"
-#include "SFML/draw.h"
-#include "SFML/fuel.h"
+#include "SFML/Helper/helper.h"
+#include "SFML/Global/variables.h"
+#include "SFML/Render/draw.h"
+#include "SFML/Engine/Fuel_System/fuel.h"
 #include <chrono>
 #include <windows.h>
 #include <thread>

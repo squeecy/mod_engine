@@ -148,3 +148,8 @@ fx_lin(double x, double x1, double y1, double x2, double y2)
 {
 return (((x - x1) / (x2 - x1)) * (y2 - y1) + y1);
 }
+
+double PERCENTRAT(double final_point, double current_point)
+{
+    return (current_point / final_point) * 100.0;
+}

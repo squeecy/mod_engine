@@ -1,5 +1,5 @@
-#include "SFML/oil.h"
-#include "SFML/variables.h"
+#include "SFML/Engine/Oil_System/oil.h"
+#include "SFML/Global/variables.h"
 
 
 

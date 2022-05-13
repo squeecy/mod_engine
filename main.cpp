@@ -1,27 +1,26 @@
 #include <iostream>
 #include <windows.h>
+#include <SFML/Graphics.hpp>
+#include <SFML/Audio.hpp>
 #include <cstdlib>
-#include "SFML/electronic.h"
 #include <windows.h>
 #include <assert.h>
 #include <math.h>
 #include <time.h>
-#include "SFML/oil.h"
+#include "SFML/Electrical/electronic.h"
+#include "SFML/Helper/debug.h"
+#include "SFML/Engine/Thermodynamics/Otto_cycle/otto.h"
+#include "SFML/Engine/Oil_System/oil.h"
 #include "SFML/environment/environment.h"
-#include "SFML/Filter/kalman.h"
+#include "SFML/Data_Filter/kalman.h"
 #include <chrono>
 #include <ctime>
 #include <thread>
 /*https://stackoverflow.com/questions/50968010/increment-a-value-up-to-a-specific-value-and-then-decrement-back-down-to-the-in*/
 
-
-
-
-
 int main( )
 {
     sf::RenderWindow window_3( sf::VideoMode ( 200, 100), "Oil Pressure");
-	//window_3.setFramerateLimit(60);
 
     sf::Texture texture_3;
 
@@ -88,7 +87,6 @@ int main( )
         wNet();
 		eff(8.0,0.8,dd_t);
 		gear_pump_Q(dd_t);
-        rpm(d_t);
         nth();
 		
 

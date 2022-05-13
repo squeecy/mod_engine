@@ -1,0 +1,7 @@
+//Exhaust Temperature Models
+    https://liu.diva-portal.org/smash/get/diva2:934580/FULLTEXT01.pdf
+
+//Adiabatic process
+    https://www.omnicalculator.com/physics/thermodynamic-processes
+    https://hyperphysics.phy-astr.gsu.edu/hbase/thermo/disel.html#c2
+    https://www.ohio.edu/mechanical/thermo/Intro/Chapt.1_6/Chapter3d.html

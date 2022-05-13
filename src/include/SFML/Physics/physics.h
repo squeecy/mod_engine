@@ -164,3 +164,33 @@ void gear_pump_Q(double d_t)
 {
 	gear_pump.Q = ((gear_pump.Vd * 2000.0) / oil.tank_cap) * eff(8.0,0.8,d_t); 
 }
+
+/* ENGINE */
+
+/* net work output per cycle */
+void wNet()
+{
+    therm_phy.wnet = therm_phy.w12 + therm_phy.w34;
+}
+
+/* Thermal Efficiency */
+void nth()
+{
+    therm_phy.therm_eff = (therm_phy.wnet / therm_phy.qin) * 100;
+}
+
+void displacement()
+{
+    cylinder.displacement = CUIN2CUCM((M_PI / 4) * pow(5.125, 2) * 3.875 * 4);
+
+}
+void MEP()
+{
+    cylinder.MEP = therm_phy.w34 / cylinder.displacement;
+}
+
+void HP()
+{
+    /* Work out (n) aka # of cycles per minute */ 
+    //cylinder.HP = cylinder.MEP * IN2MET(3.875) * engine_cfg.boreArea * n / 0.4566;
+}

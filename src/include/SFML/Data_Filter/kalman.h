@@ -1,6 +1,3 @@
-
-
-
 double KALMAN(double U)
 {
 	static const double R = 40.00;

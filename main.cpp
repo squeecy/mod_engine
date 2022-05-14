@@ -1,22 +1,18 @@
 #include <iostream>
 #include <windows.h>
-#include <SFML/Graphics.hpp>
-#include <SFML/Audio.hpp>
 #include <cstdlib>
-#include <windows.h>
 #include <assert.h>
 #include <math.h>
-#include <time.h>
+#include <thread>
 #include "SFML/Electrical/electronic.h"
 #include "SFML/Helper/debug.h"
 #include "SFML/Engine/Thermodynamics/Otto_cycle/otto.h"
 #include "SFML/Engine/Oil_System/oil.h"
 #include "SFML/environment/environment.h"
 #include "SFML/Data_Filter/kalman.h"
-#include <chrono>
-#include <ctime>
-#include <thread>
-/*https://stackoverflow.com/questions/50968010/increment-a-value-up-to-a-specific-value-and-then-decrement-back-down-to-the-in*/
+#include "SFML/Sensor/print.h"
+#include <SFML/Graphics.hpp>
+#include <SFML/Audio.hpp>
 
 int main( )
 {
@@ -36,31 +32,24 @@ int main( )
     double density_air = air_density(pressure_altitude,C2KELVIN(temp)); // change slv_temperature to dynamic temp
 
     std::cout << "ground temperature: " << slv_temp() << " \370C" << std::endl;
-
     std::cout << "temperature at altitude: " << temp_at_alt << " \370C" << std::endl;
-
     std::cout << "sea_lvl_pressure: " << slv_pressure() << std::endl;
-    
     std::cout << "pressure at altitude: " << HPA2ATM(pressure_altitude)  << " ATM" << std::endl;
-
     std::cout << "density at altitude: " << density_air << " kg/m^3" << std::endl;
 
 
 
     
-    if (!texture_3.loadFromFile("D:/Astro/src/res/img/oil_preassure.png"))
+    if (!texture_3.loadFromFile("src/res/img/oil_preassure.png"))
     {
         std::cout << "Load failed" << std::endl;
         
         system("pause");
     }
 
-
-
     sf::Sprite sprite_3;
     sprite_3.setTexture(texture_3);
     sprite_3.setTextureRect(sf::IntRect(0, 0, 500, 444400));
-    //sf::Clock clock;
     sf::Time previousTime = clock.getElapsedTime();
     sf::Time currentTime;
 	sf::RectangleShape rect;	
@@ -69,13 +58,15 @@ int main( )
 	rect.setSize(sf::Vector2f(3,30));
     while (window_3.isOpen())
     {
+		/* setup */
         sf::Event event;
         sf::Event event_2;
         sf::Event event_3;
-
         sf::Time elapsed = clock.getElapsedTime(); 
         double d_t = elapsed.asSeconds(); 
         double dd_t = clock.restart().asSeconds();
+
+		/* simmulations teps */
         adi_compression();
         const_combustion();    
         adi_expansion();
@@ -147,7 +138,7 @@ int main( )
         //std::cout << "Velocity: " <<cylinder.V << " m/ms" << std::endl;
 		//std::cout << "pump flow rate: " << gear_pump.Q << std::endl;
 		//std::cout << "oil_p_line_pos: " << rectanglePosition.x << std::endl; 
-		std::cout << "oil pressure: " << KALMAN(oil_press) << std::endl;
+		//std::cout << "oil pressure: " << KALMAN(oil_press) << std::endl;
 		//std::cout << "efficency: " << eff(8.0,0.8,dd_t)<< std::endl;  
         //std::cout << "vol1: " <<engine_cfg.cyl_volume<< std::endl;
         //std::cout << "T4: " <<comb_chamber.T4 << std::endl;
@@ -161,10 +152,8 @@ int main( )
         //std::cout << "thermal efficiency: "<<therm_phy.therm_eff<< std::endl;
         //combustion(d_t);
         //env_temp();
+		cv_print(0);	 
         
-        
-        double air_temp = apu_hardware.apu_compressor.air_temp;
-        double last_temp = apu_hardware.apu_compressor.air_temp - air_temp;
     }
 
     

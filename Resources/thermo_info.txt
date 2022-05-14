@@ -3,5 +3,5 @@
 
 //Adiabatic process
     https://www.omnicalculator.com/physics/thermodynamic-processes
-    https://hyperphysics.phy-astr.gsu.edu/hbase/thermo/disel.html#c2
+    http://hyperphysics.phy-astr.gsu.edu/hbase/thermo/disel.html#c2
     https://www.ohio.edu/mechanical/thermo/Intro/Chapt.1_6/Chapter3d.html

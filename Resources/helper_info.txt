@@ -1,3 +1,5 @@
 // utility used for helper.h 
 //being used for unit translations and interpolation 
     https://github.com/skiselkov/libacfutils
+
+Clear screen smoothly - https://www.sololearn.com/Discuss/1714796/how-to-update-console-without-flicker-in-c

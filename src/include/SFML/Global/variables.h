@@ -8,11 +8,6 @@
 #define Q2L(q)	((q) / (1.0567))
 
 
-struct 
-{
-	double one_resistance = 12.0;
-    double battery = one_resistance;  
-}bat;
 
 struct {
     double air_inlet;
@@ -48,6 +43,9 @@ struct
 	double pIn_T = sump_T; 
     double tank_mass = LBS2G(15.12);
 	double tank_cap = Q2L(8) * 0.001; /*in m^3*/ 
+	double temp;
+	double pressure;
+
 
 	struct Sump{
 		double sump_T = 70.0;
@@ -130,7 +128,7 @@ struct {
     double airDensity = air_density(sea_pressure, amb_temp); 
     /* pressure at altitude */
     double ambient_pressure = amb_pressure(amb_temp,FEET2MET(10000),INHG2HPA(sea_pressure));
-}env_stuff;
+}global_environment;
 
 struct {
     /* stainless steel conductivity */

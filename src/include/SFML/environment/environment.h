@@ -19,6 +19,5 @@ double alt_pressure(double p0, double h, double h0, double T);
 double air_density(double Pa, double T);
 double temp_at_altitude(double Ta, double ha, double h);
 double amb_pressure(double T, double h, double P0);
-
 }
 #endif

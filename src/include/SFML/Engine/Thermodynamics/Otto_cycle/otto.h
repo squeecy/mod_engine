@@ -10,7 +10,7 @@
 /* 1 - 2 Adiabatic compression */ 
 void adi_compression(){
 
-   comb_chamber.Ta = C2KELVIN(env_stuff.amb_temp); 
+   comb_chamber.Ta = C2KELVIN(global_environment.amb_temp); 
    double dT = comb_chamber.Ta - comb_chamber.T2; 
 
    /* Compression temp Tb = Ta * rC^y-1 = T2 */ 

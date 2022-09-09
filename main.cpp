@@ -5,6 +5,9 @@
 #include <assert.h>
 #include <math.h>
 #include <thread>
+#include <SFML/Graphics.hpp>
+#include <SFML/Audio.hpp>
+#include "SFML/Engine/Hardware/engine_trig.h"
 #include "SFML/Electrical/electronic.h"
 #include "SFML/Helper/debug.h"
 #include "SFML/Engine/Thermodynamics/Otto_cycle/otto.h"
@@ -12,9 +15,11 @@
 #include "SFML/environment/environment.h"
 #include "SFML/Data_Filter/kalman.h"
 #include "SFML/Sensor/print.h"
+#include "SFML/Render/draw.h"
 #include "SFML/Render/console_format.h"
-#include <SFML/Graphics.hpp>
-#include <SFML/Audio.hpp>
+#define n 3
+
+
 
 int main( )
 {
@@ -70,7 +75,6 @@ int main( )
         adi_compression();
         const_combustion();    
         adi_expansion();
-        cylinder_force();
         cylinder_work();
         displacement();
         MEP();
@@ -79,9 +83,17 @@ int main( )
 		eff(8.0,0.8,dd_t);
 		gear_pump_Q(dd_t);
         nth();
+		cam_torque(&comb_chamber.P3, &hardware.cam_theta);
         oil.temp = dT_oil(&oil.sump.pIn_T, &oil.sump.sump_T, 197500, oil.tank_mass,2,dd_t);
 		oil.pressure = poiseuille(vis_of_oil(&oil.temp), IN2MET(15), &gear_pump.Q, 
 			M_PI*pow(0.0762,2), 0.005574);
+
+		
+		//double arr1[] = {hardware.camRod_r * cos(hardware.cam_theta),hardware.camRod_r * 
+		//sin(hardware.cam_theta),0};
+		//double arr2[] = {0,cylinder.F,0};
+		//double cross_P[n];
+		
         while (window_3.pollEvent ( event_3))
         {
 				
@@ -126,7 +138,9 @@ int main( )
 		std::cout << std::setw(24) << std::right << "| Oil Parameters |" << std::endl
 		 << std::setw(17) << std::right << "Pump_Flow: " << gear_pump.Q  << std::endl
 		 << std::setw(20) << std::right << "Oil_Pressure: " << KALMAN(oil.pressure)  << std::endl
-		 << std::setw(23) << std::right << "Oil_Temperature: " << oil.temp << std::endl;
+		 << std::setw(23) << std::right << "Oil_Temperature: " << oil.temp << std::endl
+		 << std::setw(26) << std::right << "Combustion Pressure: " << comb_chamber.P3 << std::endl
+		 << std::setw(26) << std::right << "Cam Torque: " <<  cross_product(arr1,arr2,cross_P) << std::endl;
     }
 
     

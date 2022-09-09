@@ -2,8 +2,8 @@
 /*https://x-engineer.org/mean-effective-pressure-mep/.*/ 
 #include "SFML/Helper/helper.h"
 #include "SFML/Global/variables.h"
-#include "SFML/Render/draw.h"
-#include "SFML/Engine/Fuel_System/fuel.h"
+//#include "SFML/Render/draw.h"
+//#include "SFML/Engine/Fuel_System/fuel.h"
 #include <chrono>
 #include <windows.h>
 #include <thread>
@@ -14,7 +14,7 @@ struct{
     double cutoff_ratio = 1.0; /*Cut-off Ratio ...a = V3/V2 */
     double k; /*Ratio of specific heat ...k = Cp / Cv */
     double Ndisel; /*Thermal Efficiency ...nDiesel = 1 - ((1/CR^k-1) * (CR^k-1 / k(CR-1))) */
-    double Qa; /*Heat Added ...Qa = mass * Cp * d_t */
+    double Qa; /*Heat Added ...Qa = mass * Cp *d_t */
     double NworkD; /*Net Work Done ...NworkD = Ndisel / Qa */
     double mass; /*mass ... P*V*M/R*T;(P*V = n * R * T) */
     double mean_effect_press; /*Mean effective Pressure NworkD / Displacement Volume */
@@ -47,71 +47,35 @@ struct{
     }engine_cfg;
 
 
-void cylinder_force()
-{
-    cylinder.mass = engine_cfg.boreArea * 0.259; /* area * density of steel */
-    cylinder.F = HPA2PA(comb_chamber.P3) * engine_cfg.boreArea; /* Returns in N */ 
-}
+extern void __attribute__((constructor)) cylinder_force();
 
-void cylinder_work()
-{
-   cylinder.W = (cylinder.F * engine_cfg.stroke) / (1.0/2.0 * cylinder.mass); 
-   cylinder.V = (sqrt(cylinder.W)) / 1000; /* m/s */ 
-}
+extern void cylinder_work();
 
-void camTorque()
-{
-   /* NM = F * Radius of camshaft */ 
-   camshaft.cam_torque = cylinder.F * 0.032; 
-}
+extern void camTorque();
 
 
 
-/* change in temp = heat in joiles / amount in grams * specific heat */
-double dT_oil(double *T1, double *T2, double J, double g, double sh, double d_t)
-{
-    *T1+= (J / (g * sh));
-    return filter_in(*T2, *T1, d_t, 60);
-}
+/* change in temp = heat in joiles / amount in grams * specific heat 
 
+T1 = Starting oil temperature (c)
+T2 = Final oil temperature (c)
+J = Heat in the system (j)
+g = Amount of liquid (g)
+sh = specific heat
+*/
+extern double dT_oil(double *T1, double *T2, double J, double g, double sh, double d_t);
 
+//extern double heat_capacity_fuel(double d_t);
 
-double heat_capacity_fuel(double d_t)
-{
-    /* H = m * Cp * dT */
-    return (fuelTank.total_fuel * 2.22 * fuelTank.fTemp - fuelTank.fTemp) /d_t;
-}
+extern double thermal_conductivity_oil(double T);
 
-double thermal_conductivity_oil(double T)
-{
-    /* W/(m-K) */
-    return fx_lin(T, C2KELVIN(0), 0.15, C2KELVIN(200), 0.119);
-}
+extern double heat_capacity_oil(double T);
 
-double heat_capacity_oil(double T)
-{
-    /* Specific heat J/(g-K) */
-    return fx_lin(T, C2KELVIN(0) , 1900, C2KELVIN(300), 2900);
-}
+extern double heat_capacity_steel(double T);
 
-double heat_capacity_steel(double T)
-{
-   /* Q = mcdT J/(kg-K)  */
-   return (0.443 + 2E-4 * T - 8E-10 * pow(T, 2)) * 1000;  
-}
+extern double heat_transfer(double k, double A, double T0, double T1, double t, double d);
 
-double heat_transfer(double k, double A, double T0, double T1, double t, double d)
-{
-    /* Q = (kA(dT)^t) / d */
-    return (k * A * (T0 - T1) * t) / d;
-}
-
-/* dynamic viscosity, newtonian model 
- FIX LATER  - change interp to math model */ 
-double vis_of_oil(double *T)
-{
-    return fx_lin(*T,0,3.82,100,0.015);
-}
+extern double vis_of_oil(double *T);
 /*
 Gives the pressure drop in an incompressible
 and Newtonian fluid in laminar flow
@@ -124,10 +88,7 @@ Q - volumetric flow rate
 R - pipe radius
 A - cross section of pipe
 */
-double poiseuille(double vis, double L, double *Q, double R, double A)
-{
-      return (8 * vis * L * *Q) / (M_PI * (pow(R,A))); 
-}
+extern double poiseuille(double vis, double L, double *Q, double R, double A);
 
 /*  
 Heat transfer by radiation
@@ -136,10 +97,7 @@ A = area of the object
 T1 = temperature of object 
 T2 = outside source temperature
 */
-double rad_tran(double e, double A, double T1, double T2) 
-{
-	return ((BOLTZMANN_CONST) * (e) * (A) ) * ((pow(T2,4)) - (pow(T1,4)));
-}
+extern double rad_tran(double e, double A, double T1, double T2);
 
 /*
 Fourier's law
@@ -150,47 +108,22 @@ d = thickness
 T = temperature of liquid
 Te = temperature effecting the object 
 */
-double fourier(double gamma, double A, double d, double T, double Te)
-{
-	return(((gamma * A) / d) * (T - Te));
-}
+extern double fourier(double gamma, double A, double d, double T, double Te);
 
-double eff(double s1, double s2, double d_t)
-{
-	return (s1 * d_t) + s2;
-}
+extern double eff(double s1, double s2, double d_t);
 
-void gear_pump_Q(double d_t)
-{
-	gear_pump.Q = ((gear_pump.Vd * 2000.0) / oil.tank_cap) * eff(8.0,0.8,d_t); 
-}
+extern void gear_pump_Q(double d_t);
 
 /* ENGINE */
 
 /* net work output per cycle */
-void wNet()
-{
-    therm_phy.wnet = therm_phy.w12 + therm_phy.w34;
-}
+extern void wNet();
 
 /* Thermal Efficiency */
-void nth()
-{
-    therm_phy.therm_eff = (therm_phy.wnet / therm_phy.qin) * 100;
-}
+extern void nth();
 
-void displacement()
-{
-    cylinder.displacement = CUIN2CUCM((M_PI / 4) * pow(5.125, 2) * 3.875 * 4);
+extern void displacement();
 
-}
-void MEP()
-{
-    cylinder.MEP = therm_phy.w34 / cylinder.displacement;
-}
+extern void MEP();
 
-void HP()
-{
-    /* Work out (n) aka # of cycles per minute */ 
-    //cylinder.HP = cylinder.MEP * IN2MET(3.875) * engine_cfg.boreArea * n / 0.4566;
-}
+extern void HP();

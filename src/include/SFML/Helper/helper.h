@@ -1,12 +1,12 @@
+#ifndef _HELPER_H_
+#define _HELPER_H_
+
 #include <iostream>
 #include <math.h>
 #define  M_PI 3.14159265358979323846 /* pi */
 #define	KELVIN2C(k)    ((k) - 273.15)
 double 
-C2KELVIN(double c)
-{
-    return c + 273.15;
-}
+C2KELVIN(double c);
 #define	FAH2C(f)	(((f) - 32) * 0.555555)
 #define	C2FAH(c)	(((c) * 1.8) + 32)
 #define	FAH2KELVIN(f)	(((f) + 459.67) * 0.5555555555)
@@ -96,42 +96,9 @@ C2KELVIN(double c)
 
 
 
-double filter_in(double old_val,double new_val, double d_t, double lag)
-{
-    do{
-        double o = (old_val);
-        double n = (new_val); 
-        old_val += (n - o) * ((d_t) / (lag));
-        if((o < n && old_val > n) || (o > n && old_val < n))
-            old_val = n;
-        //std::cout << "filter in: " << old_val << std::endl;
-        return old_val;
-    } while(0);
-}
+double filter_in(double old_val,double new_val, double d_t, double lag);
 
-double filter_in_lin(double old_val, double tgt, double d_t, double step)
-{
-    do{
-        double o = (old_val);
-        double t = (tgt);
-        double s;
-        if(isnan(o))
-            o = t;
-       if(o < t)
-            s = (d_t) * (step);
-        else
-            s = (d_t) * (-(step));
-       
-       if((o <= t && o + s > t) || (o >= t && o + s < t))
-            (old_val) = t;
-        else
-            (old_val) += s;
-
-    
-        return old_val;
-    } while(0);
-    return 0;
-}
+double filter_in_lin(double old_val, double tgt, double d_t, double step);
 
 
 /*
@@ -144,12 +111,8 @@ double filter_in_lin(double old_val, double tgt, double d_t, double step)
 * @param y2 Second reference point's y coordinate.
 */
 double
-fx_lin(double x, double x1, double y1, double x2, double y2)
-{
-return (((x - x1) / (x2 - x1)) * (y2 - y1) + y1);
-}
+fx_lin(double x, double x1, double y1, double x2, double y2);
+double PERCENTRAT(double final_point, double current_point);
 
-double PERCENTRAT(double final_point, double current_point)
-{
-    return (current_point / final_point) * 100.0;
-}
+#endif
+

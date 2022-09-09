@@ -41,14 +41,14 @@ struct
 {
     double sump_T = 70.0;
 	double pIn_T = sump_T; 
-    double tank_mass = LBS2G(15.12);
+    double tank_mass = LBS2G(42.0);
 	double tank_cap = Q2L(8) * 0.001; /*in m^3*/ 
 	double temp;
 	double pressure;
 
 
 	struct Sump{
-		double sump_T = 70.0;
+		double sump_T = 60.0;
 		double pIn_T = sump_T; 
 	};
 	Sump sump;

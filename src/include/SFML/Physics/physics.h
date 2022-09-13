@@ -1,5 +1,7 @@
 /*https://www.lycoming.com/sites/default/files/O-320%20Operator%20Manual%2060297-30.pdf*/
 /*https://x-engineer.org/mean-effective-pressure-mep/.*/ 
+#ifndef PHYSICS_H
+#define PHYSICS_H
 #include "SFML/Helper/helper.h"
 #include "SFML/Global/variables.h"
 //#include "SFML/Render/draw.h"
@@ -112,7 +114,7 @@ extern double fourier(double gamma, double A, double d, double T, double Te);
 
 extern double eff(double s1, double s2, double d_t);
 
-extern void gear_pump_Q(double d_t);
+extern void gear_pump_Q(double *GQ, double d_t);
 
 /* ENGINE */
 
@@ -127,3 +129,5 @@ extern void displacement();
 extern void MEP();
 
 extern void HP();
+
+#endif

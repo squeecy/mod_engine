@@ -22,7 +22,7 @@ extern double arr1[];
 extern double arr2[];
 extern double cross_P[];
 
-extern double cross_product(double vect_A[], double vect_B[], double cross_P[]);
-extern void cam_torque(double *cylinder_force, double *cam_theta);
+extern void cross_product(double *pressure, double *force);
+//extern void cam_torque(double *cylinder_force, double *cam_theta);
 
 #endif

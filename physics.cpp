@@ -1,5 +1,3 @@
-#ifndef PHYSICS_H
-#define PHYSICS_H
 #include "SFML/Physics/physics.h"
 #include "SFML/Engine/Hardware/engine_trig.h"
 
@@ -122,9 +120,9 @@ double eff(double s1, double s2, double d_t)
 	return (s1 * d_t) + s2;
 }
 
-void gear_pump_Q(double d_t)
+void gear_pump_Q(double *GQ, double d_t)
 {
-	gear_pump.Q = ((gear_pump.Vd * 2000.0) / oil.tank_cap) * eff(8.0,0.8,d_t); 
+	*GQ = ((gear_pump.Vd * 2000.0) / oil.tank_cap) * eff(8.0,0.8,d_t); 
 }
 
 /* ENGINE */
@@ -162,4 +160,3 @@ void HP()
 
 
 
-#endif

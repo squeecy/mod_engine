@@ -81,14 +81,14 @@ int main( )
         camTorque();
         wNet();
 		eff(8.0,0.8,dd_t);
-		gear_pump_Q(dd_t);
+		gear_pump_Q(&gear_pump.Q, dd_t);
         nth();
-		cam_torque(&comb_chamber.P3, &hardware.cam_theta);
-        oil.temp = dT_oil(&oil.sump.pIn_T, &oil.sump.sump_T, 197500, oil.tank_mass,2,dd_t);
-		oil.pressure = poiseuille(vis_of_oil(&oil.temp), IN2MET(15), &gear_pump.Q, 
+		//cam_torque(&comb_chamber.P3, &hardware.cam_theta);
+        oil.temp = dT_oil(&oil.sump.pIn_T, &oil.sump.sump_T, 197500.0, oil.tank_mass,2.0,dd_t);
+		oil.pressure = poiseuille(vis_of_oil(&oil.temp), IN2MET(15.0), &gear_pump.Q, 
 			M_PI*pow(0.0762,2), 0.005574);
-
 		
+		cross_product(&comb_chamber.P3, &hardware.cylForce);
 		//double arr1[] = {hardware.camRod_r * cos(hardware.cam_theta),hardware.camRod_r * 
 		//sin(hardware.cam_theta),0};
 		//double arr2[] = {0,cylinder.F,0};
@@ -135,12 +135,12 @@ int main( )
 		temperature_of_oil_print(0);
 		thermal_cv_print(0);
 	
-		std::cout << std::setw(24) << std::right << "| Oil Parameters |" << std::endl
-		 << std::setw(17) << std::right << "Pump_Flow: " << gear_pump.Q  << std::endl
+		std::cout << std::setw(24) << std::right << "| Oil Parameters |" << 
+			std::setw(36) << std::right << "| Cylinder Parameters |" << std::endl
+		 << std::setw(21) << std::right << "Oil_Pump_Flow: " << gear_pump.Q << std::setw(28) << 
+		 std::right <<  "Cam_Torque: " << hardware.cylForce << s(td::endl
 		 << std::setw(20) << std::right << "Oil_Pressure: " << KALMAN(oil.pressure)  << std::endl
-		 << std::setw(23) << std::right << "Oil_Temperature: " << oil.temp << std::endl
-		 << std::setw(26) << std::right << "Combustion Pressure: " << comb_chamber.P3 << std::endl
-		 << std::setw(26) << std::right << "Cam Torque: " <<  cross_product(arr1,arr2,cross_P) << std::endl;
+		 << std::setw(23) << std::right << "Oil_Temperature: " << oil.temp << std::endl;
     }
 
     

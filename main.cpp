@@ -5,8 +5,6 @@
 #include <assert.h>
 #include <math.h>
 #include <thread>
-#include <SFML/Graphics.hpp>
-#include <SFML/Audio.hpp>
 #include "SFML/Engine/Hardware/engine_trig.h"
 #include "SFML/Electrical/electronic.h"
 #include "SFML/Helper/debug.h"
@@ -18,9 +16,8 @@
 #include "SFML/Render/draw.h"
 #include "SFML/Render/console_format.h"
 #include "SFML/Global/timestep.h"
-#include "SMFL/Render/window_render/glfw_init.h"
 #include "GLFW/include/GLFW/glfw3.h"
-#define GLFW_DLL
+
 #define n 3
 
 

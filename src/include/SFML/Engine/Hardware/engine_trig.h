@@ -12,9 +12,9 @@
 
 struct{
 	//degree 
-	double cam_theta = 30.0;
-	double camTorque = 0.0;
-	const double camRod_r = 0.1524; //length of the line in. (n)
+	double crank_theta = 30.0;
+	double crankTorque = 0.0;
+	const double crankRod_r = 0.1524; //length of the line in. (m)
 	double cylForce;
 }hardware;
 

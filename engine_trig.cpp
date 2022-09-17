@@ -4,24 +4,12 @@
 #include "SFML/Physics/physics.h"
 #define n 3
 using namespace Eigen;
-/* find the center of the circle 
-(x-h)^2 + (y-k)^2 = r 
-*/
 
-
-
-
-/*
-double cross_product(double vect_A[], double vect_B[], double cross_P[])
-{
-	return cross_P[2];
-}
-*/
 void cross_product(double *pressure, double *force)
 {
 
-	double vect_A[] = {hardware.camRod_r * cos(hardware.cam_theta),hardware.camRod_r * 
-			sin(hardware.cam_theta),0};
+	double vect_A[] = {hardware.crankRod_r * cos(hardware.crank_theta),hardware.crankRod_r * 
+			sin(hardware.crank_theta),0};
 	double vect_B[] = {0,*pressure,0};
 	double cross_P[n];
 	cross_P[0] = vect_A[1] * vect_B[2] - vect_A[2] * vect_B[1];
@@ -31,18 +19,6 @@ void cross_product(double *pressure, double *force)
 }
 
 
-/*
-void cam_torque(double *cylinder_force, double *cam_theta)
-{
-	//hardware.camRod, hardware.cam_theta
-	double vect_A[] = {hardware.camRod_r * cos(*cam_theta), 
-		hardware.camRod_r * sin(*cam_theta), 0.0};
-	double vect_B[] = {0.0, cylinder.F, 0.0};
-	double cross_P[n];
-	//cross_product(vect_A, vect_B, cross_P);
-	hardware.camTorque = cross_product(*pressure);
-}
-*/
 
 
  /*

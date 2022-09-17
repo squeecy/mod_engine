@@ -17,61 +17,47 @@
 #include "SFML/Sensor/print.h"
 #include "SFML/Render/draw.h"
 #include "SFML/Render/console_format.h"
+#include "SFML/Global/timestep.h"
+#include "SMFL/Render/window_render/glfw_init.h"
+#include "GLFW/include/GLFW/glfw3.h"
+#define GLFW_DLL
 #define n 3
 
 
 
-int main( )
+int main(void )
 {
-    sf::RenderWindow window_3( sf::VideoMode ( 200, 100), "Oil Pressure");
+	
 
-    sf::Texture texture_3;
+	GLFWwindow* window;
+	if(!glfwInit())
+		return -1;
+	
+	window = glfwCreateWindow(200, 100, "Oil Pressure", NULL, NULL);
+	if(!window)
+	{
+		glfwTerminate();
+		return -1;
+	}
 
-    sf::Time micro = sf::microseconds(10000);
-    sf::Time seconds = sf::seconds(0.01f);
-    sf::Clock clock; 
+	glfwMakeContextCurrent(window);
+	
+	/* TIME STEP */
+	float m_LastFrameTime = 0.0f;
 
-    /* ENVIRONMENT VARIABLES */
-    double temp = global_environment.amb_temp;
-    double sea_pressure = global_environment.sea_pressure; 
-    double temp_at_alt = temp_at_altitude(temp, FEET2MET(0.0),FEET2MET(10000.0));
-    double pressure_altitude = amb_pressure(temp_at_alt,FEET2MET(10000.0),INHG2HPA(sea_pressure));
-    double density_air = air_density(pressure_altitude,C2KELVIN(temp)); // change slv_temperature to dynamic temp
+	while(!glfwWindowShouldClose(window))
+	{
+		/* WINDOW CREATION */
+		glClear(GL_COLOR_BUFFER_BIT);
+		glfwSwapBuffers(window);
+		glfwPollEvents();
 
-	/*
-    std::cout << "ground temperature: " << slv_temp() << " \370C" << std::endl;
-    std::cout << "temperature at altitude: " << temp_at_alt << " \370C" << std::endl;
-    std::cout << "sea_lvl_pressure: " << slv_pressure() << std::endl;
-    std::cout << "pressure at altitude: " << HPA2ATM(pressure_altitude)  << " ATM" << std::endl;
-    std::cout << "density at altitude: " << density_air << " kg/m^3" << std::endl;*/
+		/* TIME STEP */
+		float time = (float)glfwGetTime();
+		timeStep.d_t = time - m_LastFrameTime;
+		m_LastFrameTime = time;
 
-    if (!texture_3.loadFromFile("src/res/img/oil_preassure.png"))
-    {
-        std::cout << "Load failed" << std::endl;
-        
-        system("pause");
-    }
-
-    sf::Sprite sprite_3;
-    sprite_3.setTexture(texture_3);
-    sprite_3.setTextureRect(sf::IntRect(0, 0, 500, 444400));
-    sf::Time previousTime = clock.getElapsedTime();
-    sf::Time currentTime;
-	sf::RectangleShape rect;	
-	sf::Vector2f rectanglePosition(0,50);
-	rect.setPosition(rectanglePosition);
-	rect.setSize(sf::Vector2f(3,30));
-    while (window_3.isOpen())
-    {
-		/* setup */
-        sf::Event event;
-        sf::Event event_2;
-        sf::Event event_3;
-        sf::Time elapsed = clock.getElapsedTime(); 
-        double d_t = elapsed.asSeconds(); 
-        double dd_t = clock.restart().asSeconds();
-
-		/* simmulations teps */
+		/* simulations teps */
         adi_compression();
         const_combustion();    
         adi_expansion();
@@ -80,56 +66,15 @@ int main( )
         MEP();
         camTorque();
         wNet();
-		eff(8.0,0.8,dd_t);
-		gear_pump_Q(&gear_pump.Q, dd_t);
+		eff(8.0,0.8,timeStep.d_t);
+		vis_of_oil(&oil.temp, &oil.viscosity);
+		gear_pump_Q(&gear_pump.Q, timeStep.d_t);
         nth();
-		//cam_torque(&comb_chamber.P3, &hardware.cam_theta);
-        oil.temp = dT_oil(&oil.sump.pIn_T, &oil.sump.sump_T, 197500.0, oil.tank_mass,2.0,dd_t);
-		oil.pressure = poiseuille(vis_of_oil(&oil.temp), IN2MET(15.0), &gear_pump.Q, 
-			M_PI*pow(0.0762,2), 0.005574);
-		
+		oilTemp(&oil.temp, timeStep.d_t);	
+		oilPressure(&oil.pressure, &oil.viscosity ,&gear_pump.Q);
 		cross_product(&comb_chamber.P3, &hardware.cylForce);
-		//double arr1[] = {hardware.camRod_r * cos(hardware.cam_theta),hardware.camRod_r * 
-		//sin(hardware.cam_theta),0};
-		//double arr2[] = {0,cylinder.F,0};
-		//double cross_P[n];
-		
-        while (window_3.pollEvent ( event_3))
-        {
-				
-			sf::Vector2i mousePos_3 = sf::Mouse::getPosition(window_3);
 
-			m_pos.x_3 = mousePos_3.x;
-			m_pos.y_3 = mousePos_3.y;
-			//std::cout<< "X:"<< m_pos.x_3<< ","<< "Y:" << m_pos.y_3 << std::endl;
-			sf::RectangleShape rect;	
-			sf::Vector2f rectanglePosition(100,50);
-			rect.setPosition(rectanglePosition);
-			rect.setSize(sf::Vector2f(30,30));
-			window_3.display( );
-            switch ( event_3.type )
-            {
-                case sf::Event::Closed:
-                        window_3.close( );
-                        break;
-                        
-            }
-
-        }
-		rectanglePosition.x = line(oil.pressure);
-		rect.setPosition(rectanglePosition);
-        window_3.clear( ); 
-        window_3.draw(sprite_3);
-		window_3.draw(rect);
-
-        sf::Vector2i mousePos_3 = sf::Mouse::getPosition(window_3);
-
-        m_pos.x_3 = mousePos_3.x;
-        m_pos.y_3 = mousePos_3.y;
-        //std::cout<< "X:"<< m_pos.x_3<< ","<< "Y:" << m_pos.y_3 << std::endl;
-
-        window_3.display( );
-
+		/* CONSOLE FUNCTIONS */
 		ClearScreen();	
 		radiation_print(0);
 		temperature_of_oil_print(0);
@@ -138,11 +83,10 @@ int main( )
 		std::cout << std::setw(24) << std::right << "| Oil Parameters |" << 
 			std::setw(36) << std::right << "| Cylinder Parameters |" << std::endl
 		 << std::setw(21) << std::right << "Oil_Pump_Flow: " << gear_pump.Q << std::setw(28) << 
-		 std::right <<  "Cam_Torque: " << hardware.cylForce << s(td::endl
+		 std::right <<  "Cam_Torque: " << hardware.cylForce << std::endl
 		 << std::setw(20) << std::right << "Oil_Pressure: " << KALMAN(oil.pressure)  << std::endl
 		 << std::setw(23) << std::right << "Oil_Temperature: " << oil.temp << std::endl;
-    }
-
-    
-    return EXIT_SUCCESS;
+}	
+	glfwTerminate();
+	return 0;
 }

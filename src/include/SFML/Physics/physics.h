@@ -65,7 +65,6 @@ J = Heat in the system (j)
 g = Amount of liquid (g)
 sh = specific heat
 */
-extern double dT_oil(double *T1, double *T2, double J, double g, double sh, double d_t);
 
 //extern double heat_capacity_fuel(double d_t);
 
@@ -77,7 +76,7 @@ extern double heat_capacity_steel(double T);
 
 extern double heat_transfer(double k, double A, double T0, double T1, double t, double d);
 
-extern double vis_of_oil(double *T);
+extern void vis_of_oil(double *T, double *viscosity);
 /*
 Gives the pressure drop in an incompressible
 and Newtonian fluid in laminar flow
@@ -90,7 +89,7 @@ Q - volumetric flow rate
 R - pipe radius
 A - cross section of pipe
 */
-extern double poiseuille(double vis, double L, double *Q, double R, double A);
+extern double poiseuille(double vis, double L, double Q, double R, double A);
 
 /*  
 Heat transfer by radiation
@@ -112,9 +111,9 @@ Te = temperature effecting the object
 */
 extern double fourier(double gamma, double A, double d, double T, double Te);
 
-extern double eff(double s1, double s2, double d_t);
+extern double eff(double s1, double s2, float d_t);
 
-extern void gear_pump_Q(double *GQ, double d_t);
+extern void gear_pump_Q(double *GQ, float d_t);
 
 /* ENGINE */
 
@@ -129,5 +128,11 @@ extern void displacement();
 extern void MEP();
 
 extern void HP();
+
+extern double dT_oil(double *T1, double *T2, double J, double g, double sh, float d_t);
+
+extern double oilTemp(double *oilTemp, float d_t);		
+
+extern double oilPressure(double *oilpressure, double *viscosity, double *gearpump);
 
 #endif

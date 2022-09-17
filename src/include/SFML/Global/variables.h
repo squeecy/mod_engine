@@ -45,6 +45,7 @@ struct
 	double tank_cap = Q2L(8) * 0.001; /*in m^3*/ 
 	double temp;
 	double pressure;
+	double viscosity;
 
 
 	struct Sump{
@@ -102,10 +103,15 @@ struct {
 struct{
     double mass; /* Weight of the cylinder head in kg */
     double F; /* N Force  F = P * A */
+	double FG; /* Gas Force Pmax * (pi * B^2 / 4) */
     double W;
     double V; /* velocity in M/s */
     double displacement;
     double MEP;
+	double V1; /* volume at position 1 */
+	double V2; /* volume at position 2 */
+	double Vinst; /* instantaneous volume */
+	double x; /* volume position */
 }cylinder;
 
 struct{

@@ -11,7 +11,7 @@
 #include <thread>
 #include <cmath>
 #define  M_PI 3.14159265358979323846 /* pi */
-struct{
+struct {
     double CR = comb_chamber.rC; /*Compression Ratio ...CR = V1/V2 */   
     double cutoff_ratio = 1.0; /*Cut-off Ratio ...a = V3/V2 */
     double k; /*Ratio of specific heat ...k = Cp / Cv */
@@ -49,7 +49,9 @@ struct{
     }engine_cfg;
 
 
-extern void __attribute__((constructor)) cylinder_force();
+extern void  cylinder_force(double& combPressure, double& cylinderF);
+
+extern void cylinder_accel();
 
 extern void cylinder_work();
 
@@ -76,7 +78,7 @@ extern double heat_capacity_steel(double T);
 
 extern double heat_transfer(double k, double A, double T0, double T1, double t, double d);
 
-extern void vis_of_oil(double *T, double *viscosity);
+extern void vis_of_oil(double& T, double& viscosity);
 /*
 Gives the pressure drop in an incompressible
 and Newtonian fluid in laminar flow
@@ -89,7 +91,7 @@ Q - volumetric flow rate
 R - pipe radius
 A - cross section of pipe
 */
-extern double poiseuille(double vis, double L, double Q, double R, double A);
+static double poiseuille(double vis, double L, double Q, double R, double A);
 
 /*  
 Heat transfer by radiation
@@ -109,11 +111,11 @@ d = thickness
 T = temperature of liquid
 Te = temperature effecting the object 
 */
-extern double fourier(double gamma, double A, double d, double T, double Te);
+static double fourier(double gamma, double A, double d, double T, double Te);
 
 extern double eff(double s1, double s2, float d_t);
 
-extern void gear_pump_Q(double *GQ, float d_t);
+extern void gear_pump_Q(double& GQ, float d_t);
 
 /* ENGINE */
 
@@ -129,10 +131,10 @@ extern void MEP();
 
 extern void HP();
 
-extern double dT_oil(double *T1, double *T2, double J, double g, double sh, float d_t);
+extern double dT_oil(double& T1, double& T2, double J, double g, double sh, float d_t);
 
-extern double oilTemp(double *oilTemp, float d_t);		
+extern double oilTemp(double& oilTemp, float d_t);		
 
-extern double oilPressure(double *oilpressure, double *viscosity, double *gearpump);
+extern double oilPressure(double& oilpressure, double& viscosity, double& gearpump);
 
 #endif

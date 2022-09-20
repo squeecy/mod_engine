@@ -119,6 +119,9 @@ struct{
 }camshaft;
 
 struct{
+}crankShaft;
+
+struct{
 
     double crank_shaft_rotation; /*degrees*/
     double complete_cycle_pSecond; 

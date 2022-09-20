@@ -2,11 +2,17 @@
 #include "SFML/Engine/Hardware/engine_trig.h"
 
 
-void cylinder_force()
+void cylinder_force(double& combPressure, double& cylinderF)
 {
     cylinder.mass = engine_cfg.boreArea * 0.259; /* area * density of steel */
-    cylinder.F = HPA2PA(comb_chamber.P3) * engine_cfg.boreArea; /* Returns in N */ 
+    cylinderF  = HPA2PA(combPressure) * engine_cfg.boreArea; /* Returns in N */ 
 	cylinder.FG = HPA2PA(comb_chamber.P3) * ((M_PI * pow(engine_cfg.boreArea,2.0)) / 4.0);
+
+}
+
+void cylinder_accel()
+{
+	
 
 }
 
@@ -64,9 +70,9 @@ double heat_transfer(double k, double A, double T0, double T1, double t, double 
     return (k * A * (T0 - T1) * t) / d;
 }
 
-void vis_of_oil(double *T, double *viscosity)
+void vis_of_oil(double& T, double& viscosity)
 {
-    *viscosity = fx_lin(*T,0,3.82,100,0.015);
+    viscosity = fx_lin(T,0,3.82,100,0.015);
 }
 /*
 Gives the pressure drop in an incompressible
@@ -80,7 +86,7 @@ Q - volumetric flow rate
 R - pipe radius
 A - cross section of pipe
 */
-double poiseuille(double vis, double L, double Q, double R, double A)
+static double poiseuille(double vis, double L, double Q, double R, double A)
 {
       return (8.0 * vis * L * Q) / (M_PI * (pow(R,A))); 
 }
@@ -106,7 +112,7 @@ d = thickness
 T = temperature of liquid
 Te = temperature effecting the object 
 */
-double fourier(double gamma, double A, double d, double T, double Te)
+static double fourier(double gamma, double A, double d, double T, double Te)
 {
 	return(((gamma * A) / d) * (T - Te));
 }
@@ -116,9 +122,9 @@ double eff(double s1, double s2, float d_t)
 	return (s1 * d_t) + s2;
 }
 
-void gear_pump_Q(double *GQ, float d_t)
+void gear_pump_Q(double& GQ, float d_t)
 {
-	*GQ = ((gear_pump.Vd * 2000.0) / oil.tank_cap) * eff(8.0,0.8,d_t); 
+	GQ = ((gear_pump.Vd * 2000.0) / oil.tank_cap) * eff(8.0,0.8,d_t); 
 }
 
 /* ENGINE */
@@ -151,22 +157,22 @@ void HP()
     //cylinder.HP = cylinder.MEP * IN2MET(3.875) * engine_cfg.boreArea * n / 0.4566;
 }
 
-double dT_oil(double *T1, double *T2, double J, double g, double sh, float d_t)
+double dT_oil(double& T1, double& T2, double J, double g, double sh, float d_t)
 {
-    *T1+= (J / (g * sh));
-    return filter_in(*T2, *T1, d_t, 60);
+    T1+= (J / (g * sh));
+    return filter_in(T2, T1, d_t, 60);
 }
 
 
-double oilTemp(double *oilTemp, float d_t)
+double oilTemp(double& oilTemp, float d_t)
 {
-	*oilTemp = dT_oil(&oil.sump.pIn_T, &oil.sump.sump_T, 197500.0, 
+	oilTemp = dT_oil(oil.sump.pIn_T, oil.sump.sump_T, 197500.0, 
 		oil.tank_mass,2.0,d_t);
 }
 
-double oilPressure(double *oilpressure, double *viscosity, double *gearpump)
+double oilPressure(double& oilpressure, double& viscosity, double& gearpump)
 {
-	*oilpressure = poiseuille(*viscosity, IN2MET(15.0), *gearpump, 
+	oilpressure = poiseuille(viscosity, IN2MET(15.0), gearpump, 
 			M_PI*pow(0.0762,2), 0.005574);
 }
 

@@ -1,3 +1,3 @@
 # mod_engine
 
-A simulation that utilizes physics to draw the effects and cycles of an engine using C++ and the SFML library to draw examples. 
+A WIP project that utilizes physics principles to simulate a Lycoming O-320-E2G engine, using openGL to draw gauges as visual models. 
